@@ -7,8 +7,8 @@ const app = express();   //  creates your actual server.
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 
-// Routes commented out for now
-// app.use('/api/auth', require('./routes/auth'));
+
+app.use('/api/auth', require('./routes/auth'));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
