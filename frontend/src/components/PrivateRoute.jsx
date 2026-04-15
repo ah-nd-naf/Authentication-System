@@ -1,3 +1,5 @@
+// this is the frontend version of your protect.js
+
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
