@@ -1,104 +1,72 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 
 export default function Login() {
-  const [form, setForm]       = useState({ email: '', password: '' });
-  const [error, setError]     = useState('');
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login }  = useAuth();
-  const navigate   = useNavigate();
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
     try {
-      const { data } = await axios.post(
-        'http://localhost:5000/api/auth/login', form
-      );
+      const { data } = await axios.post('http://localhost:5000/api/auth/login', form);
       login(data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
+      setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKey = (e) => {
-    if (e.key === 'Enter') handleSubmit();
-  };
-
   return (
     <AuthLayout>
-      <div className="bg-[#111827] rounded-2xl border border-gray-800 p-8">
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8">
-          <span className="flex-1 text-center py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium">
-            Login
-          </span>
-          <Link
-            to="/signup"
-            className="flex-1 text-center py-2 rounded-lg bg-gray-800 text-gray-400 text-sm hover:text-white transition"
-          >
-            Sign up
-          </Link>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-3xl font-semibold text-white mb-1">Welcome back</h2>
+          <p className="text-gray-400">Sign in to access your account</p>
         </div>
 
-        <h2 className="text-xl font-semibold text-white mb-1">Welcome back</h2>
-        <p className="text-gray-500 text-sm mb-6">Login to your account</p>
+        {error && <div className="bg-red-500/20 border border-red-400/30 text-red-300 p-4 rounded-2xl text-sm">{error}</div>}
 
-        {/* Error */}
-        {error && (
-          <div className="mb-5 bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-lg">
-            {error}
+        <div className="space-y-5">
+          <div>
+            <label className="text-sm text-gray-300 mb-2 block">Email Address</label>
+            <input
+              type="email"
+              placeholder="ahnaf@example.com"
+              value={form.email}
+              onChange={(e) => setForm({...form, email: e.target.value})}
+              className="w-full bg-white/5 border border-white/20 rounded-2xl px-6 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-violet-400"
+            />
           </div>
-        )}
 
-        {/* Fields */}
-        <div className="mb-4">
-          <label className="block text-xs text-gray-400 mb-1.5">Email</label>
-          <input
-            type="email"
-            placeholder="ahnaf@example.com"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            onKeyDown={handleKey}
-            className="w-full bg-gray-900 text-white placeholder-gray-600 border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition"
-          />
+          <div>
+            <label className="text-sm text-gray-300 mb-2 block">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={(e) => setForm({...form, password: e.target.value})}
+              className="w-full bg-white/5 border border-white/20 rounded-2xl px-6 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-violet-400"
+            />
+          </div>
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-600 py-4 rounded-2xl font-semibold text-white text-lg active:scale-95 transition-all disabled:opacity-70"
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
         </div>
-
-        <div className="mb-6">
-          <label className="block text-xs text-gray-400 mb-1.5">Password</label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            onKeyDown={handleKey}
-            className="w-full bg-gray-900 text-white placeholder-gray-600 border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition"
-          />
-        </div>
-
-        {/* Button */}
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-lg transition text-sm"
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-
-        <p className="text-center text-gray-600 text-xs mt-6">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 transition">
-            Sign up
-          </Link>
-        </p>
-
       </div>
     </AuthLayout>
   );
