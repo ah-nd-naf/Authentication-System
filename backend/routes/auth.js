@@ -5,6 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const ActivityLog = require('../models/ActivityLog');
 const protect = require('../middleware/protect');
 
 const generateToken = (id) =>
@@ -19,6 +20,12 @@ router.post('/signup', async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashed });
+
+    await ActivityLog.create({
+      userId: user._id,
+      action: 'Account Created',
+      description: 'System signup successful'
+    });
 
     res.status(201).json({ token: generateToken(user._id), name: user.name });
   } catch (err) {
@@ -35,6 +42,12 @@ router.post('/login', async (req, res) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: 'Invalid credentials' });
+
+    await ActivityLog.create({
+      userId: user._id,
+      action: 'Logged In',
+      description: 'System login successful'
+    });
 
     res.json({ token: generateToken(user._id), name: user.name });
   } catch {
