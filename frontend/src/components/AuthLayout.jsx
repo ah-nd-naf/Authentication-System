@@ -1,11 +1,27 @@
 // src/components/AuthLayout.jsx
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export default function AuthLayout({ children }) {
+export default function AuthLayout() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const isLogin = location.pathname === '/login' || location.pathname === '/';
+
+  const variants = {
+    initial: (isLogin) => ({
+      x: isLogin ? -40 : 40,
+      opacity: 0
+    }),
+    animate: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (isLogin) => ({
+      x: isLogin ? -40 : 40,
+      opacity: 0
+    })
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-slate-950 flex items-center justify-center p-6 relative overflow-hidden">
@@ -51,8 +67,20 @@ export default function AuthLayout({ children }) {
           </div>
 
           {/* Form Content Area */}
-          <div className="p-10 min-h-[480px]">
-            {children}
+          <div className="p-10 min-h-[480px] overflow-hidden">
+            <AnimatePresence mode="wait" custom={isLogin}>
+              <motion.div
+                key={location.pathname}
+                custom={isLogin}
+                variants={variants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
