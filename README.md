@@ -15,6 +15,13 @@ A full-stack authentication system with JWT, protected routes, a live dashboard,
 
 ---
 
+## 🚀 Live Links
+
+- **🌐 Frontend**: [https://authentication-system-six-teal.vercel.app](https://authentication-system-six-teal.vercel.app)
+- **⚙️ Backend API**: [https://mern-auth-backend-adi8.onrender.com](https://mern-auth-backend-adi8.onrender.com)
+
+---
+
 ## ✨ Features
 
 - 🔑 &nbsp;**JWT Authentication** — Secure signup & login with bcrypt password hashing and 7-day tokens
