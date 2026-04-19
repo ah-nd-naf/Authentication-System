@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -15,7 +16,7 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', form);
+      const { data } = await axios.post(`${API_URL}/api/auth/login`, form);
       login(data.token);
       navigate('/dashboard');
     } catch (err) {

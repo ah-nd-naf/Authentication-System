@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import EditProfileModal from '../components/EditProfileModal';
+import API_URL from '../config';
 
 export default function Dashboard() {
   const { token, logout } = useAuth();
@@ -15,8 +16,8 @@ export default function Dashboard() {
     const fetchDashboardData = async () => {
       try {
         const [userRes, dataRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5000/api/user/dashboard-data', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get(`${API_URL}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${API_URL}/api/user/dashboard-data`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setUser(userRes.data);
         setDashboardData({
@@ -39,7 +40,7 @@ export default function Dashboard() {
   const handleProfileUpdate = (updatedUser) => {
     setUser((prev) => ({ ...prev, ...updatedUser }));
     // Optionally refetch activities here if you want to immediately show the "Profile Updated" log
-    axios.get('http://localhost:5000/api/user/dashboard-data', { headers: { Authorization: `Bearer ${token}` } })
+    axios.get(`${API_URL}/api/user/dashboard-data`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setDashboardData({
         stats: res.data.stats,
         activities: res.data.recentActivity

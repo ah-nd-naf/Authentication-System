@@ -4,7 +4,10 @@ const cors = require('cors');  // allows React frontend to communicate with your
 require('dotenv').config();    // loads secret values from your .env file
 const app = express();   //  creates your actual server.
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ 
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173', 
+  credentials: true 
+}));
 app.use(express.json());
 
 

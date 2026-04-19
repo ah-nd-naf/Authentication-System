@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import API_URL from '../config';
 
 export default function EditProfileModal({ isOpen, onClose, user, onUpdate }) {
   const [form, setForm] = useState({ name: '', email: '' });
@@ -24,7 +25,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate }) {
 
     try {
       const { data } = await axios.put(
-        'http://localhost:5000/api/user/profile',
+        `${API_URL}/api/user/profile`,
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
